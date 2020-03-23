@@ -9,6 +9,7 @@
         </div>
       </li>
     </ul>
+
     <button @click="showAnother()">Another Item</button>
   </div>
 </template>
