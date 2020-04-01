@@ -1,12 +1,17 @@
 <template>
   <div class="hello">
-    <h1>Posts</h1>
+    <h2>News Articles</h2>SORT BY:
+    <b-button class="btn" variant="primary" @click="sortByTitle('title')">Title</b-button>
+    <span>&emsp;</span>
+    <b-button class="btn" variant="danger" @click="sortByAuthor('author')">Author</b-button>
 
-    <button @click="sortByAZ('API')">Sort By A-Z</button>
-    <button @click="sortByZA('API')">Sort by Z-A</button>
     <ul v-if="lists && lists.length">
-      <li v-for="item of lists" :key="item.API">
-        <router-link v-bind:to="'/details/' + item.API">{{ item.API }}</router-link>
+      <li v-for="(item, index) of lists" :key="index">
+        <div class="story">
+          <router-link v-bind:to="'/details/' + index">{{ index + 1 }}-{{ item.title }}</router-link>
+          <br />
+          <span class="meta">by {{ item.author }} | publisled at {{ item.publishedAt }}</span>
+        </div>
       </li>
     </ul>
   </div>
@@ -17,49 +22,46 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class HelloWorld extends Vue {
-  @Prop() private msg!: string;
   lists = [];
-  firstName = "Semih";
-  lastName = "Kasimoglu";
-  counter = 0;
 
   created() {
-    fetch("https://api.publicapis.org/entries?category=health")
+    fetch(
+      "https://newsapi.org/v2/top-headlines?country=nl&apiKey=d94efa04117b41ddaeb36bffcb564496"
+    )
       .then(response => response.json())
-      .then(data => (this.lists = data.entries.slice(0, 10)));
+      .then(data => (this.lists = data.articles.slice(0, 10)));
   }
 
-  //computed
-  get fullName(): string {
-    return this.firstName + " " + this.lastName;
-  }
-
-  //method
-  incrementCounter() {
-    this.counter = Math.floor(Math.random() * 10) + 1;
-  }
-  sortByAZ(prop: string) {
+  sortByTitle(prop: string) {
     this.lists.sort((a, b) => (a[prop] < b[prop] ? -1 : 1));
   }
-  sortByZA(prop: string) {
-    this.lists.sort((a, b) => (a[prop] < b[prop] ? 1 : -1));
+  sortByAuthor(prop: string) {
+    this.lists.sort((a, b) => (a[prop] < b[prop] ? -1 : 1));
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+.hello {
+  margin-top: 70px;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+.story {
+  background-color: #fff;
+  padding: 10px 30px 10px 50px;
+  border-bottom: 1px solid #eee;
+  position: relative;
+  line-height: 20px;
 }
-li {
-  margin: 0 10px;
+
+.story a {
+  color: #34495e;
+  font-weight: 600;
+  text-decoration: none;
 }
-a {
-  color: #42b983;
+
+.story .meta {
+  font-size: 0.85em;
+  color: #828282;
 }
 </style>

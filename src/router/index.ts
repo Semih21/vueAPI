@@ -11,7 +11,7 @@ const routes = [
     component: Home
   },
   {
-    path: "/categories",
+    path: "/categories/:category",
     name: "Categories",
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/Categories.vue")
@@ -26,7 +26,7 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../components/RandomItem.vue")
   },
   {
-    path: "/details/:API",
+    path: "/details/:index",
     name: "Details",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route

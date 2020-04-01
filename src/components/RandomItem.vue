@@ -1,16 +1,28 @@
 <template>
-  <div class="hello">
-    <h1>Random Item</h1>
-    <ul v-if="randomItem && randomItem.length">
-      <li v-for="item of randomItem" :key="item.API">
-        <div>
-          <h2>{{item.API}}</h2>
-          <h3>{{item.Description}}</h3>
-        </div>
-      </li>
-    </ul>
+  <div v-if="randomItem">
+    <div v-for="item in randomItem" :key="item.title" class="random-container">
+      <b-card no-body class="overflow-hidden" style="max-width: 540px;">
+        <b-row no-gutters>
+          <b-col md="12">
+            <b-card-img :src="item.urlToImage" :width="260" :height="260" class="rounded-0"></b-card-img>
+          </b-col>
+          <b-col md="12">
+            <b-card-body>
+              <h4>
+                <b-card-text>{{ item.title }}</b-card-text>
+              </h4>
 
-    <button @click="showAnother()">Another Item</button>
+              <b-card-text>{{ item.content }}</b-card-text>
+              <p>
+                <a :href="item.url">Read more..</a>
+              </p>
+
+              <b-button class="btn" variant="primary" @click="showAnother()">Another News</b-button>
+            </b-card-body>
+          </b-col>
+        </b-row>
+      </b-card>
+    </div>
   </div>
 </template>
 
@@ -26,9 +38,16 @@ export default class RandomItem extends Vue {
   }
 
   fetchData() {
-    fetch("https://api.publicapis.org/random")
+    fetch(
+      "https://newsapi.org/v2/top-headlines?country=nl&apiKey=d94efa04117b41ddaeb36bffcb564496"
+    )
       .then(response => response.json())
-      .then(data => (this.randomItem = data.entries.slice(0)));
+      .then(
+        data =>
+          (this.randomItem = data.articles
+            .sort(() => Math.random() - Math.random())
+            .slice(0, 1))
+      );
   }
   showAnother() {
     return this.fetchData();
@@ -50,5 +69,11 @@ li {
 }
 a {
   color: #42b983;
+}
+.random-container {
+  margin-top: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
